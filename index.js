@@ -28,7 +28,7 @@ class Mixin {
     this.state = { tweenQueue: [] };
   }
 
-  tweenState = (a, b, c) => {
+  tweenState = (a, b, c, instance) => {
     // tweenState(stateNameString, config)
     // tweenState(stateRefFunc, stateNameString, config)
 
@@ -42,13 +42,13 @@ class Mixin {
       b = a;
       a = returnState;
     }
-    this._tweenState(a, b, c);
+    this._tweenState(a, b, c, instance);
   }
 
-  _tweenState = (stateRefFunc, stateName, config) => {
+  _tweenState(stateRefFunc, stateName, config, instance) {
     // _pendingState doesn't exist in React 0.13 anymore. No harm leaving it
     // here for backward compat
-    const state = this._pendingState || this.state;
+    const state = instance._pendingState || instance.state;
     const stateRef = stateRefFunc(state);
 
     // see the reasoning for these defaults at the top
@@ -80,10 +80,10 @@ class Mixin {
     // sorry for mutating. No idea where in the state the value is
     stateRef[stateName] = newConfig.endValue;
     // this will also include the above update
-    this.setState({ tweenQueue: newTweenQueue });
+    instance.setState({ tweenQueue: newTweenQueue });
 
     if (newTweenQueue.length === 1) {
-      this.startRaf();
+      instance.startRaf();
     }
   }
 
@@ -163,6 +163,6 @@ class Mixin {
   }
 }
 
-tweenState.Mixin = Mixin;
+tweenState.Mixin = new Mixin();
 
 module.exports = tweenState;
