@@ -62,7 +62,7 @@ class Mixin {
       stackBehavior: config.stackBehavior || DEFAULT_STACK_BEHAVIOR,
     };
 
-    const newTweenQueue = state.tweenQueue;
+    let newTweenQueue = state.tweenQueue;
     if (newConfig.stackBehavior === tweenState.stackBehavior.DESTRUCTIVE) {
       newTweenQueue = state.tweenQueue.filter(function (item) {
         return item.stateName !== stateName || item.stateRefFunc(state) !== stateRef;
@@ -99,10 +99,10 @@ class Mixin {
   _getTweeningValue = (stateRefFunc, stateName) => {
     const state = this.state;
     const stateRef = stateRefFunc(state);
-    const tweeningValue = stateRef[stateName];
+    let tweeningValue = stateRef[stateName];
     const now = Date.now();
 
-    for (const i = 0; i < state.tweenQueue.length; i++) {
+    for (let i = 0; i < state.tweenQueue.length; i++) {
       const item = state.tweenQueue[i];
       const itemStateRef = item.stateRefFunc(state);
       if (item.stateName !== stateName || itemStateRef !== stateRef) {
@@ -137,7 +137,7 @@ class Mixin {
     const now = Date.now();
     const newTweenQueue = [];
 
-    for (const i = 0; i < state.tweenQueue.length; i++) {
+    for (let i = 0; i < state.tweenQueue.length; i++) {
       const item = state.tweenQueue[i];
       if (now - item.initTime < item.config.duration) {
         newTweenQueue.push(item);
